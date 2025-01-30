@@ -1,1 +1,9 @@
-hello world
+total 40
+-rwxr-xr-x 1 sechlahb 2024_rabat 19328 Jan 30 18:07 a.out
+-rw-r--r-- 1 sechlahb 2024_rabat     0 Jan 30 18:07 file1.txt
+-rw-r--r-- 1 sechlahb 2024_rabat     0 Jan 28 15:36 file2.txt
+drwxr-xr-x 2 sechlahb 2024_rabat  4096 Jan 30 15:21 libft
+-rw-r--r-- 1 sechlahb 2024_rabat  2519 Jan 30 17:50 main.c
+-rw-r--r-- 1 sechlahb 2024_rabat  1180 Jan 30 17:50 path.c
+-rw-r--r-- 1 sechlahb 2024_rabat  1381 Jan 30 17:50 pipex.h
+-rw-r--r-- 1 sechlahb 2024_rabat  2650 Jan 30 18:07 treaning.c
