@@ -26,7 +26,7 @@ void c_commands(t_pipex *pipex)
     }
     if (pipex->pid1 == 0)
     {
-
+        
     }
 // seconde child
     pipex->pid2 = fork();
