@@ -7,6 +7,17 @@ void ft_init_data(char **av, char **envp, t_pipex *pipex)
     pipex->envp = envp;
 }
 
+void ft_fills_argument(t_pipex *pipex)
+{
+    pipex->cmd1 = ft_splite(pipex->av[2], ' ');
+    pipex->cmd2 = ft_splite(pipex->av[3], ' ');
+}
+
+void ft_check_argument(t_pipex *pipex)
+{
+    
+}
+
 void c_commands(t_pipex *pipex)
 {
     //create the pipe
@@ -26,6 +37,8 @@ void c_commands(t_pipex *pipex)
     }
     if (pipex->pid1 == 0)
     {
+        close (fd[0]);
+        dup2(fd[1], STDIN_FILENO);
 
     }
 // seconde child
@@ -37,7 +50,8 @@ void c_commands(t_pipex *pipex)
     }
     if (pipex->pid2 == 0)
     {
-
+        close (fd[1]);
+        dup2(fd[0], STDOUT_FINENO);
     }
 
 }

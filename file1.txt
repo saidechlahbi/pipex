@@ -1,1 +1,9 @@
-hello world
+total 40
+-rwxrwxrwx 1 zear zear 16128 Jan 29 01:35 a.out
+-rwxrwxrwx 1 zear zear    12 Jan 28 21:53 file1.txt
+-rwxrwxrwx 1 zear zear     0 Jan 27 22:07 file2.txt
+-rwxrwxrwx 1 zear zear  1673 Jan 28 16:51 main.c
+-rwxrwxrwx 1 zear zear   455 Jan 29 01:08 pipex.h
+-rwxrwxrwx 1 zear zear  1888 Jan 28 16:37 splite.c
+-rwxrwxrwx 1 zear zear  1404 Jan 29 01:07 strjoin.c
+-rwxrwxrwx 1 zear zear  2140 Jan 29 01:35 treaning.c

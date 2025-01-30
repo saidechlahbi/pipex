@@ -3,8 +3,10 @@
 #include <unistd.h>
 #include <string.h>
 
-int main ()
-{
+// int main (int ac , char **av, char **envp)
+// {
+    //////// understand  fork function andhow it work //////////
+
     // int fd[2];
     // pid_t pid;
     // char buffer[100];
@@ -37,20 +39,56 @@ int main ()
     // }
 
 
+//////// understand dup2 and how it work //////////////
 
-    int fd = open("file1.txt", O_RDWR);
-    if (fd == -1)
+
+//     int fd = open("file1.txt", O_RDWR);
+//     if (fd == -1)
+//     {
+//         perror("error\n");
+//         return 1;
+//     }
+//     if (dup2(fd, STDOUT_FILENO) == -1)
+//     {
+//         perror("error\n");
+//         return 1;
+//     }
+//     printf("hello world\n");
+
+// ///// undestand execve() and how it work 
+
+//     (void)ac;
+//     if (execve(av[1],av, envp) == -1)
+//     {
+//         perror("error founding \n");
+//         return (-1);
+//     }
+//     return (1);
+
+#include <stdio.h>
+#include <unistd.h>
+
+int main(int ac , char **av, char **envp)
+{
+    //char *argv[] = {"/bin/ls", "-l", NULL}; // Arguments for ls -l
+   // char *envp[] = {NULL};                  // Use default environment
+
+    printf("Executing /bin/ls...\n");
+    // while (i < 10)
+    //     printf("%s\n",envp[i++]);
+    int fd  = open ("file1.txt", O_RDWR);
+
+    // dup2(fd, STDOUT_FILENO);
+
+    if (execve(av[1], &av[1], envp) == -1)
     {
-        perror("error\n");
-        return 1;
+        perror ("error counting \n");
+        return (-1);
     }
-    if (dup2(fd, STDOUT_FILENO) == -1)
-    {
-        perror("error\n");
-        return 1;
-    }
-    printf("hello world\n");
+    
+    // Replace the current process with /bin/ls
 
-
-
+    return 0; // This will never execute if execve is successful
 }
+
+// }
