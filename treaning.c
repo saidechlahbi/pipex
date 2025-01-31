@@ -12,6 +12,7 @@
 
 #include <fcntl.h>
 #include <stdio.h>
+#include <time.h>
 #include <unistd.h>
 #include <string.h>
 
@@ -123,69 +124,142 @@
 #include <fcntl.h>
 #include <sys/wait.h>
 
-int main(int ac, char **av, char **envp)
-{
-    int pipefd[2];  // Array to hold read and write pipe file descriptors
-    pid_t pid;
+// int main(int ac, char **av, char **envp)
+// {
+//     int pipefd[2];  // Array to hold read and write pipe file descriptors
+//     pid_t pid;
 
-    // Create pipe
-    if (pipe(pipefd) == -1) {
-        perror("pipe");
-        return 1;
-    }
+//     // Create pipe
+//     if (pipe(pipefd) == -1) {
+//         perror("pipe");
+//         return 1;
+//     }
     
-    // Create first child for ls
-    pid = fork();
-    if (pid == -1) {
-        perror("fork");
-        return 1;
+//     // Create first child for ls
+//     pid = fork();
+//     if (pid == -1) {
+//         perror("fork");
+//         return 1;
+//     }
+
+//     if (pid == 0) {  // Child process for ls
+//         // Close read end
+//         close(pipefd[0]);
+        
+//         // Redirect stdout to pipe write end
+//         dup2(pipefd[1], STDOUT_FILENO);
+//         close(pipefd[1]);
+
+//         // Execute ls
+//         char *args[] = {"ls", "-la", NULL};
+//         execve("/bin/ls", args, envp);
+//         perror("execve ls");
+//         return 1;
+//     }
+
+//     // Create second child for grep
+//     pid = fork();
+//     if (pid == -1) {
+//         perror("fork");
+//         return 1;
+//     }
+
+//     if (pid == 0) {  // Child process for grep
+//         // Close write end
+//         close(pipefd[1]);
+        
+//         // Redirect stdin to pipe read end
+//         dup2(pipefd[0], STDIN_FILENO);
+//         close(pipefd[0]);
+
+//         // Execute grep
+//         char *args[] = {"grep", av[4], NULL};
+//         execve("/bin/grep", args, envp);
+//         perror("execve grep");
+//         return 1;
+//     }
+
+//     // Parent process
+//     close(pipefd[0]);
+//     close(pipefd[1]);
+
+//     // Wait for both children
+//     wait(NULL);
+//     wait(NULL);
+
+//     return 0;
+// }
+
+
+
+
+int main (int ac, char **av, char **envp)
+{
+    int pipefd[2];
+
+    if(pipe(pipefd) == -1)
+    {
+        perror("failur in pipe\n");
+        return -1;
     }
 
-    if (pid == 0) {  // Child process for ls
-        // Close read end
-        close(pipefd[0]);
-        
-        // Redirect stdout to pipe write end
+    // int fd1 = open ("file1.txt", O_RDWR);
+    // if (fd1 < 0)
+    // {
+    //     perror("failur in open\n");
+    //     return -1;
+    // }
+
+    // int fd2 = open ("file2.txt", O_RDWR);
+    // if (fd2 < 0)
+    // {
+    //     perror("failur in open\n");
+    //     return -1;
+    // }
+
+    pid_t pid1 = fork();
+
+    if (pid1 < 0)
+    {
+        perror ("failur in fork function\n");
+        return -1;
+    }
+    if (pid1 == 0)
+    {
+        close (pipefd[0]); // read end
         dup2(pipefd[1], STDOUT_FILENO);
-        close(pipefd[1]);
+        char *str[] = { "/bin/ls", "-la", NULL};
+        if (execve(av[1], str, envp) == -1)
+        {
+            perror("failur in execve1\n");
+            return -1;
+        }
 
-        // Execute ls
-        char *args[] = {"ls", "-la", NULL};
-        execve("/bin/ls", args, envp);
-        perror("execve ls");
-        return 1;
     }
 
-    // Create second child for grep
-    pid = fork();
-    if (pid == -1) {
-        perror("fork");
-        return 1;
+    pid_t pid2  = fork();
+    if (pid2 < 0)
+    {
+        perror("failur in fork\n");
+        return -1;
     }
-
-    if (pid == 0) {  // Child process for grep
-        // Close write end
-        close(pipefd[1]);
-        
-        // Redirect stdin to pipe read end
+    if (pid2 == 0)
+    {
+        close (pipefd[1]); //write end;
         dup2(pipefd[0], STDIN_FILENO);
-        close(pipefd[0]);
+        char *ss[] = {"/bin/grep", "main", NULL};
+        if (execve(av[3], ss, envp) == -1)
+        {
+            perror("failur in execve2\n");
+            return -1;
+        }
 
-        // Execute grep
-        char *args[] = {"grep", av[4], NULL};
-        execve("/bin/grep", args, envp);
-        perror("execve grep");
-        return 1;
     }
+    close (pipefd[0]);
+    close (pipefd[1]);
 
-    // Parent process
-    close(pipefd[0]);
-    close(pipefd[1]);
-
-    // Wait for both children
-    wait(NULL);
-    wait(NULL);
-
-    return 0;
+    waitpid(pid1, NULL, 0);
+    waitpid(pid2, NULL, 0);
 }
+
 
