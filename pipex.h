@@ -13,7 +13,7 @@
 #ifndef PIPEX_H
 # define PIPEX_H
 
-#include "libft.h"
+#include "libft/libft.h"
 
 #include <stdio.h>
 #include <unistd.h>
@@ -21,6 +21,7 @@
 #include <fcntl.h>
 #include <stdlib.h>
 #include <sys/stat.h>
+
 typedef struct s_pipex{
     int pipefd[2];
     char **av;
@@ -33,7 +34,5 @@ typedef struct s_pipex{
     char **cmd2;
 }   t_pipex;
 
-char **ft_splite(char *str, char sep);
-char	*ft_strjoin(char const *s1, char const *s2);
 
 #endif
