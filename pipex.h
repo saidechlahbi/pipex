@@ -20,8 +20,7 @@
 #include <string.h>
 #include <fcntl.h>
 #include <stdlib.h>
-#include <sys/stat.h>
-
+#include <sys/wait.h>
 typedef struct s_pipex{
     int pipefd[2];
     char **av;
@@ -32,7 +31,13 @@ typedef struct s_pipex{
     int fd2;
     char **cmd1;
     char **cmd2;
+    char *cmd_with_path_1;
+    char *cmd_with_path_2;
+    char **paths;
 }   t_pipex;
 
+char *ft_get_cmd_with_path(t_pipex *pipex, char *cmd);
+void cleanup(t_pipex *pipex);
+void ft_free_split(char **arr);
 
 #endif
