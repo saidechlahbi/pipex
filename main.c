@@ -23,7 +23,14 @@ void ft_pipe (t_pipex *pipex)
     pipex->fd1 = open (av[1], O_RDONLY);
     if (pipex->fd1 == -1)
     {
-        error("error ")
+        error("error in fd1\n");
+        exit(EXIT_FAILURE);
+    }
+    pipex->fd2 = open (av[1], O_RDONLY);
+    if (pipex->fd2 == -1)
+    {
+        error("error in fd1\n");
+        exit(EXIT_FAILURE);
     }
     if (pipe(pipex->pipefd) == -1)
     {
