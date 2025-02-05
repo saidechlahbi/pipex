@@ -20,31 +20,36 @@ void ft_pipe (t_pipex *pipex)
     pipex->cmd1[0] = pipex->cmd_with_path_1;
     pipex->cmd2[0] = pipex->cmd_with_path_2;
 
+    pipex->fd1 = open (av[1], O_RDONLY);
+    if (pipex->fd1 == -1)
+    {
+        error("error ")
+    }
     if (pipe(pipex->pipefd) == -1)
     {
-        perror("failur in pipe\n");
+        error("failur in pipe\n");
         exit(EXIT_FAILURE);
     }
 
     pipex->pid1 = fork();
     if (pipex->pid1 < 0)
     {
-        perror("failur in fork\n");
-        exit(EXIT_FAILURE);       
+        error("failur in fork\n");
+        exit(EXIT_FAILURE);      
     }
     if (pipex->pid1 == 0)
     {
         close(pipex->pipefd[0]);
         dup2(pipex->pipefd[1], STDOUT_FILENO);
         execve( pipex->cmd1[0],  pipex->cmd1,  pipex->envp);
-        perror("failur in execve of ls\n");
+        error("failur in execve of ls\n");
         exit(EXIT_FAILURE);
     }
 
     pipex->pid2 = fork();
     if (pipex->pid2 < 0)
     {
-        perror("failur in fork\n");
+        error("failur in fork\n");
         exit(EXIT_FAILURE);       
     }
     if (pipex->pid2 == 0)
@@ -52,7 +57,7 @@ void ft_pipe (t_pipex *pipex)
         close (pipex->pipefd[1]);
         dup2(pipex->pipefd[0], STDIN_FILENO);
         execve(pipex->cmd2[0], pipex->cmd2, pipex->envp);
-        perror("failur in execve2\n");
+        error("failur in execve2\n");
         exit(EXIT_FAILURE);
     }
     close(pipex->pipefd[0]);

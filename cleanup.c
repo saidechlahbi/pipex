@@ -6,7 +6,7 @@
 /*   By: sechlahb <sechlahb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 22:25:36 by sechlahb          #+#    #+#             */
-/*   Updated: 2025/02/04 23:23:04 by sechlahb         ###   ########.fr       */
+/*   Updated: 2025/02/05 22:08:55 by sechlahb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,4 +36,10 @@ void cleanup(t_pipex *pipex)
         free(pipex->cmd_with_path_2);
     if (pipex->paths)
         ft_free_split(pipex->paths);
+}
+
+void error(char *str)
+{
+    while (str)
+        write (1, str++, 1);
 }

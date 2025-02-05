@@ -39,5 +39,6 @@ typedef struct s_pipex{
 char *ft_get_cmd_with_path(t_pipex *pipex, char *cmd);
 void cleanup(t_pipex *pipex);
 void ft_free_split(char **arr);
+void error(char *str);
 
 #endif
