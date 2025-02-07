@@ -20,13 +20,13 @@ void ft_pipe (t_pipex *pipex)
     pipex->cmd1[0] = pipex->cmd_with_path_1;
     pipex->cmd2[0] = pipex->cmd_with_path_2;
 
-    pipex->fd1 = open (av[1], O_RDONLY);
+    pipex->fd1 = open (pipex->av[1], O_CREAT | O_RDWR);
     if (pipex->fd1 == -1)
     {
         error("error in fd1\n");
         exit(EXIT_FAILURE);
     }
-    pipex->fd2 = open (av[1], O_RDONLY);
+    pipex->fd2 = open (pipex->av[4], O_CREAT | O_RDWR);
     if (pipex->fd2 == -1)
     {
         error("error in fd1\n");
@@ -48,6 +48,7 @@ void ft_pipe (t_pipex *pipex)
     {
         close(pipex->pipefd[0]);
         dup2(pipex->pipefd[1], STDOUT_FILENO);
+        dup2 (pipex->fd1, STDIN_FILENO);
         execve( pipex->cmd1[0],  pipex->cmd1,  pipex->envp);
         error("failur in execve of ls\n");
         exit(EXIT_FAILURE);
@@ -63,6 +64,8 @@ void ft_pipe (t_pipex *pipex)
     {
         close (pipex->pipefd[1]);
         dup2(pipex->pipefd[0], STDIN_FILENO);
+        dup2 (pipex->fd1, STDOUT_FILENO);
+
         execve(pipex->cmd2[0], pipex->cmd2, pipex->envp);
         error("failur in execve2\n");
         exit(EXIT_FAILURE);
