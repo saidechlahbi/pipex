@@ -111,8 +111,6 @@ int	main(int ac, char **av, char **envp)
 		exit(1);
 	ft_init(&pipex, av, envp);
 	ft_open(&pipex);
-	printf("%d %d %d %d \n", pipex.pipefd[0], pipex.pipefd[1], pipex.fd1,
-		pipex.fd2);
 	ft_first_p(&pipex);
 	ft_second_p(&pipex);
 	ft_free(&pipex);
