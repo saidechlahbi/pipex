@@ -6,7 +6,7 @@
 /*   By: sechlahb <sechlahb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/09 14:29:26 by sechlahb          #+#    #+#             */
-/*   Updated: 2025/02/09 18:29:31 by sechlahb         ###   ########.fr       */
+/*   Updated: 2025/02/12 21:11:22 by sechlahb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,5 @@ void ft_free_split(char **str);
 char *ft_right_path(t_pipex *pipex, char *comand);
 void ft_free(t_pipex *pipex);
 void ft_init(t_pipex *pipex, char **av, char **envp);
-void ft_perror(char *str);
-
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: sechlahb <sechlahb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/09 16:19:26 by sechlahb          #+#    #+#             */
-/*   Updated: 2025/02/09 22:29:14 by sechlahb         ###   ########.fr       */
+/*   Updated: 2025/02/12 21:34:48 by sechlahb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,3 @@ void	ft_init(t_pipex *pipex, char **av, char **envp)
 	free(b);
 }
 
-void	ft_perror(char *str)
-{
-	while (*str)
-		write(1, str++, 1);
-}
