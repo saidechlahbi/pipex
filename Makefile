@@ -1,6 +1,6 @@
 CC = cc
 FLAGS = -Wall -Wextra -Werror
-FILES = mandatory/free.c mandatory/pipex.c mandatory/utils.c
+FILES = mandatory/free.c mandatory/pipex.c mandatory/utils.c mandatory/ft_splite.c
 OBJ = $(FILES:.c=.o)
 NAME = pipex
 HEADER = mandatory/pipex.h

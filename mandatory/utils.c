@@ -6,11 +6,20 @@
 /*   By: sechlahb <sechlahb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/09 16:19:26 by sechlahb          #+#    #+#             */
-/*   Updated: 2025/02/13 15:24:13 by sechlahb         ###   ########.fr       */
+/*   Updated: 2025/02/14 00:31:08 by sechlahb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
+
+int ft_check(char *str)
+{
+	while (*str && *str != '\'')
+		str++;
+	if (*str)
+		return 1;
+	return 0;
+}
 
 void	ft_all_the_paths(t_pipex *pipex)
 {
@@ -69,12 +78,28 @@ void	ft_init(t_pipex *pipex, char **av, char **envp)
 
 	pipex->av = av;
 	pipex->envp = envp;
-	pipex->cmd1 = ft_split(av[2], ' ');
-	if (!pipex->cmd1)
-		exit(1);
-	pipex->cmd2 = ft_split(av[3], ' ');
-	if (!pipex->cmd2)
-		exit(1);
+	if (ft_check(av[2]) == 1)
+	{
+		pipex->cmd1 = ft_splite(av[2], ' ');
+		if (!pipex->cmd1)
+			exit(1);
+	}else
+	{
+		pipex->cmd1 = ft_split(av[2], ' ');
+		if (!pipex->cmd1)
+			exit(1);
+	}
+	if (ft_check(av[3]) == 1)
+	{
+		pipex->cmd2 = ft_splite(av[3], ' ');
+		if (!pipex->cmd2)
+			exit(1);
+	}else
+	{
+		pipex->cmd2 = ft_split(av[3], ' ');
+		if (!pipex->cmd2)
+			exit(1);
+	}
 	ft_all_the_paths(pipex);
 	a = pipex->cmd1[0];
 	b = pipex->cmd2[0];

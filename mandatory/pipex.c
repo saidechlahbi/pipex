@@ -6,13 +6,13 @@
 /*   By: sechlahb <sechlahb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/09 14:23:11 by sechlahb          #+#    #+#             */
-/*   Updated: 2025/02/13 16:52:08 by sechlahb         ###   ########.fr       */
+/*   Updated: 2025/02/14 00:33:27 by sechlahb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-void ft_exit(char *str, int status)
+void ft_exit(t_pipex *pipex, char *str, int status)
 {
 	perror(str);
 	perror("\n");
@@ -40,7 +40,7 @@ void	ft_first_p(t_pipex *pipex)
 {
 	pipex->pid1 = fork();
 	if (pipex->pid1 == -1)
-		ft_exit("fork failure", 1);
+		ft_exit(pipex, "fork failure", 1);
 	if (pipex->pid1 == 0)
 	{
         if (pipex->cmd1[0] == NULL)
@@ -57,7 +57,7 @@ void	ft_first_p(t_pipex *pipex)
 		dup2(pipex->pipefd[1], STDOUT_FILENO);
 		dup2(pipex->fd1, STDIN_FILENO);
 		if (execve(pipex->cmd1[0], pipex->cmd1, pipex->envp) == -1)
-			ft_exit("fork failure", 127);
+			ft_exit(pipex, "fork failure", 127);
 	}
 	close(pipex->pipefd[1]);
 	close(pipex->fd1);
@@ -67,7 +67,7 @@ void	ft_second_p(t_pipex *pipex)
 {
 	pipex->pid2 = fork();
 	if (pipex->pid2 == -1)
-		ft_exit("fork failure", 1);
+		ft_exit(pipex, "fork failure", 1);
 	if (pipex->pid2 == 0)
 	{
 		if (pipex->cmd2[0] == NULL)
@@ -84,7 +84,7 @@ void	ft_second_p(t_pipex *pipex)
 		dup2(pipex->pipefd[0], STDIN_FILENO);
 		dup2(pipex->fd2, STDOUT_FILENO);
 		if (execve(pipex->cmd2[0], pipex->cmd2, pipex->envp) == -1)
-			ft_exit("fork failure", 127);
+			ft_exit(pipex, "fork failure", 127);
 
 	}
 	close(pipex->fd2);

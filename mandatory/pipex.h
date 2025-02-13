@@ -6,7 +6,7 @@
 /*   By: sechlahb <sechlahb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/09 14:29:26 by sechlahb          #+#    #+#             */
-/*   Updated: 2025/02/13 15:32:36 by sechlahb         ###   ########.fr       */
+/*   Updated: 2025/02/14 00:32:00 by sechlahb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ typedef struct s_pipex{
     char **paths;
 }   t_pipex;
 
+char **ft_splite(char const *s, char c);
 void ft_all_the_paths(t_pipex *pipex);
 void ft_free_split(char **str);
 char *ft_right_path(t_pipex *pipex, char *comand);
