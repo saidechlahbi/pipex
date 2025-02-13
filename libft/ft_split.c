@@ -6,7 +6,7 @@
 /*   By: sechlahb <sechlahb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/26 15:07:16 by sechlahb          #+#    #+#             */
-/*   Updated: 2025/02/13 00:56:52 by sechlahb         ###   ########.fr       */
+/*   Updated: 2025/02/13 23:59:14 by sechlahb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,39 +77,6 @@ static char	*malloc_word(const char *s, char c, char **strings, int i)
 	return (word);
 }
 
-
-
-int ft_check(char *str)
-{
-	while (*str && *str != '\'')
-		str++;
-	if (*str)
-		return 1;
-	return 0;
-}
-
-int count_word_for_cotation(char *str)
-{
-	int count = 0;
-	while (*str)
-	{
-		while (*str && *str == ' ')
-			str++;
-		while (*str && *str != ' ' && *str != '\'')
-			str++;
-		count ++;
-		if (*str && *str == '\'')
-		{
-			while (*str && *str != '\'')
-				str++;
-			if (*str == '\'')
-				count ++;
-			str++;
-		}
-		str++;
-	}
-}
-
 char	**ft_split(char const *s, char c)
 {
 	char	**strings;
@@ -118,10 +85,6 @@ char	**ft_split(char const *s, char c)
 
 	if (!s)
 		return (NULL);
-	if (ft_check(s) == 1)
-	{
-		
-	}
 	len = count_strings(s, c);
 	strings = malloc(sizeof(char *) * (len + 1));
 	if (!strings)

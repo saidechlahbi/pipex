@@ -1,9 +1,9 @@
 CC = cc
 FLAGS = -Wall -Wextra -Werror
-FILES = free.c get_path.c main.c utils.c
+FILES = mandatory/free.c mandatory/pipex.c mandatory/utils.c
 OBJ = $(FILES:.c=.o)
 NAME = pipex
-HEADER = pipex.h
+HEADER = mandatory/pipex.h
 
 # Add libft paths
 LIBFT_PATH = ./libft
