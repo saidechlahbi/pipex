@@ -6,7 +6,7 @@
 /*   By: sechlahb <sechlahb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/09 14:23:11 by sechlahb          #+#    #+#             */
-/*   Updated: 2025/02/12 23:43:38 by sechlahb         ###   ########.fr       */
+/*   Updated: 2025/02/13 01:21:44 by sechlahb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,6 @@ void	ft_open(t_pipex *pipex)
 	pipex->fd2 = open(pipex->av[4], O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (pipex->fd2 == -1)
 		perror("open failed2\n");
-	// {
-	// 	ft_free(pipex);
-	// 	exit(1);
-	// }
 	if (pipe(pipex->pipefd) == -1)
 	{
 		perror("Pipe failed\n");
