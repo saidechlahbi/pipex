@@ -6,7 +6,7 @@
 /*   By: sechlahb <sechlahb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/09 16:19:26 by sechlahb          #+#    #+#             */
-/*   Updated: 2025/02/14 00:31:08 by sechlahb         ###   ########.fr       */
+/*   Updated: 2025/02/14 00:56:16 by sechlahb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,24 @@ char	*ft_right_path(t_pipex *pipex, char *comand)
 	}
 	return (NULL);
 }
+void ft_init_cmd(t_pipex *pipex)
+{
+	if (ft_check(pipex->av[2]) == 1)
+	{
+		pipex->cmd1 = ft_splite(pipex->av[2], ' ');
+		if (!pipex->cmd1)
+			exit(1);
+	}else
+	{
+		pipex->cmd1 = ft_split(pipex->av[2], ' ');
+		if (!pipex->cmd1)
+			exit(1);
+	}
+	if (ft_check(pipex->av[3]) == 1)
+		pipex->cmd2 = ft_splite(pipex->av[3], ' ');
+	else
+		pipex->cmd2 = ft_split(pipex->av[3], ' ');
+}
 
 void	ft_init(t_pipex *pipex, char **av, char **envp)
 {
@@ -78,27 +96,11 @@ void	ft_init(t_pipex *pipex, char **av, char **envp)
 
 	pipex->av = av;
 	pipex->envp = envp;
-	if (ft_check(av[2]) == 1)
+	ft_init_cmd(pipex);
+	if (!pipex->cmd2)
 	{
-		pipex->cmd1 = ft_splite(av[2], ' ');
-		if (!pipex->cmd1)
-			exit(1);
-	}else
-	{
-		pipex->cmd1 = ft_split(av[2], ' ');
-		if (!pipex->cmd1)
-			exit(1);
-	}
-	if (ft_check(av[3]) == 1)
-	{
-		pipex->cmd2 = ft_splite(av[3], ' ');
-		if (!pipex->cmd2)
-			exit(1);
-	}else
-	{
-		pipex->cmd2 = ft_split(av[3], ' ');
-		if (!pipex->cmd2)
-			exit(1);
+		ft_free_split(pipex->cmd1);
+		exit(1);
 	}
 	ft_all_the_paths(pipex);
 	a = pipex->cmd1[0];
