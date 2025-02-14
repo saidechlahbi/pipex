@@ -6,7 +6,7 @@
 /*   By: sechlahb <sechlahb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/09 16:12:10 by sechlahb          #+#    #+#             */
-/*   Updated: 2025/02/13 15:23:42 by sechlahb         ###   ########.fr       */
+/*   Updated: 2025/02/14 17:29:28 by sechlahb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,8 @@ void	ft_free(t_pipex *pipex)
 {
 	if (pipex->cmd1)
 		ft_free_split(pipex->cmd1);
-	if (pipex->cmd2)
-		ft_free_split(pipex->cmd2);
+	if (pipex->cmdn)
+		ft_free_split(pipex->cmdn);
 	if (pipex->paths)
 		ft_free_split(pipex->paths);
 	if (pipex->fd1)

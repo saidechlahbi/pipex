@@ -6,28 +6,22 @@
 /*   By: sechlahb <sechlahb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/09 16:19:26 by sechlahb          #+#    #+#             */
-/*   Updated: 2025/02/14 00:56:16 by sechlahb         ###   ########.fr       */
+/*   Updated: 2025/02/14 17:34:11 by sechlahb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-int ft_check(char *str)
-{
-	while (*str && *str != '\'')
-		str++;
-	if (*str)
-		return 1;
-	return 0;
-}
-
-void	ft_all_the_paths(t_pipex *pipex)
+void	ft_init(t_pipex *pipex, int ac, char **av, char **envp)
 {
 	int		i;
 	char	*str;
 	char	**paths;
 
 	i = 0;
+	pipex->ac = ac;
+	pipex->av = av;
+	pipex->envp = envp;
 	while (ft_strncmp(pipex->envp[i], "PATH=", 5) != 0)
 		i++;
 	str = ft_strtrim(pipex->envp[i], "PATH=");
@@ -70,44 +64,44 @@ char	*ft_right_path(t_pipex *pipex, char *comand)
 	}
 	return (NULL);
 }
-void ft_init_cmd(t_pipex *pipex)
+
+char **ft_init_cmd(char *cmd)
 {
-	if (ft_check(pipex->av[2]) == 1)
+	char **str;
+	int (booll), (i);
+
+	i = 0;
+	booll = 0;
+	while (cmd[i] && cmd[i] != '\'')
+		i++;
+	if (cmd[i])
+		booll = 1;
+	if (booll == 1)
 	{
-		pipex->cmd1 = ft_splite(pipex->av[2], ' ');
-		if (!pipex->cmd1)
-			exit(1);
+		str = ft_splite(cmd, ' ');
+		if (!str)
+			return NULL;
 	}else
 	{
-		pipex->cmd1 = ft_split(pipex->av[2], ' ');
-		if (!pipex->cmd1)
-			exit(1);
+		str = ft_split(cmd, ' ');
+		if (!str)
+			return NULL;
 	}
-	if (ft_check(pipex->av[3]) == 1)
-		pipex->cmd2 = ft_splite(pipex->av[3], ' ');
-	else
-		pipex->cmd2 = ft_split(pipex->av[3], ' ');
+	return str;
 }
 
-void	ft_init(t_pipex *pipex, char **av, char **envp)
+char **last_cmd(t_pipex *pipex, char *str)
 {
-	char	*a;
-	char	*b;
+	char **command;
+	char *a;
 
-	pipex->av = av;
-	pipex->envp = envp;
-	ft_init_cmd(pipex);
-	if (!pipex->cmd2)
-	{
-		ft_free_split(pipex->cmd1);
-		exit(1);
-	}
-	ft_all_the_paths(pipex);
-	a = pipex->cmd1[0];
-	b = pipex->cmd2[0];
-	pipex->cmd1[0] = ft_right_path(pipex, pipex->cmd1[0]);
-	pipex->cmd2[0] = ft_right_path(pipex, pipex->cmd2[0]);
+	command = ft_init_cmd(str);
+	if (!command)
+		return NULL;
+	a = command[0];
+	command[0] = ft_right_path(pipex, command[0]);
+	if (!command[0])
+		return NULL;
 	free(a);
-	free(b);
+	return command;
 }
-
