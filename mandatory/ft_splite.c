@@ -6,20 +6,11 @@
 /*   By: sechlahb <sechlahb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 17:20:42 by sechlahb          #+#    #+#             */
-/*   Updated: 2025/02/14 00:37:26 by sechlahb         ###   ########.fr       */
+/*   Updated: 2025/02/14 01:01:10 by sechlahb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
-
-// int ft_check(char *str)
-// {
-// 	while (*str && *str != '\'')
-// 		str++;
-// 	if (*str)
-// 		return 1;
-// 	return 0;
-// }
 
 int count_word_for_cotation(char *str)
 {
