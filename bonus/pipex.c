@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "pipex.h"
+#include <fcntl.h>
 
 void ft_exit(t_pipex *pipex, char *str, int status)
 {
@@ -46,7 +47,7 @@ void	ft_first_p(t_pipex *pipex, int *pipefd)
 		ft_exit(pipex, "fork failure", 1);
 	if (pipex->pid1 == 0)
 	{
-        if (pipex->cmd1[0] == NULL)
+        if (!pipex->cmd1 || pipex->cmd1[0] == NULL)
         {
             ft_free(pipex);
             exit(127);
@@ -73,7 +74,7 @@ void	ft_second_p(t_pipex *pipex, int *pipefd)
 		ft_exit(pipex, "fork failure", 1);
 	if (pipex->pidn == 0)
 	{
-		if (pipex->cmdn[0] == NULL)
+		if (!pipex->cmdn || pipex->cmdn[0] == NULL)
 		{
 			ft_free(pipex);
 			exit(127);
@@ -105,7 +106,7 @@ void ft_middle_procces(t_pipex *pipex, int *pipefd1, int *pipefd2, int i)
 		ft_exit(pipex, "fork failure", 1);
 	if (pid == 0)
 	{
-		if (cmd[0] == NULL)
+		if (!cmd || cmd[0] == NULL)
 		{
 			ft_free(pipex);
 			exit(127);
@@ -117,48 +118,134 @@ void ft_middle_procces(t_pipex *pipex, int *pipefd1, int *pipefd2, int i)
 			ft_exit(pipex, "fork failure", 127);
 
 	}
+	ft_free_split(cmd);
 	close(pipefd2[1]);
 	close(pipefd1[0]);
 }
 
+void	here_doc_first_p(t_pipex *pipex, int *pipefd, int fd)
+{
+	pipex->pid1 = fork();
+	if (pipex->pid1 == -1)
+		ft_exit(pipex, "fork failure", 1);
+	if (pipex->pid1 == 0)
+	{
+        if (!pipex->cmd1 || pipex->cmd1[0] == NULL)
+        {
+            ft_free(pipex);
+            exit(127);
+        }
+        if (pipex->fd1 == -1)
+        {
+            ft_free(pipex);
+            exit(1);  
+        }
+		close(pipefd[0]);
+		dup2(pipefd[1], STDOUT_FILENO);
+		dup2(fd, STDIN_FILENO);
+		if (execve(pipex->cmd1[0], pipex->cmd1, pipex->envp) == -1)
+			ft_exit(pipex, "fork failure", 127);
+	}
+	close(pipefd[1]);
+	close(fd);
+}
+
+void	here_doc_second_p(t_pipex *pipex, int *pipefd)
+{
+	pipex->pidn = fork();
+	if (pipex->pidn == -1)
+		ft_exit(pipex, "fork failure", 1);
+	if (pipex->pidn == 0)
+	{
+		if (!pipex->cmdn || pipex->cmdn[0] == NULL)
+		{
+			ft_free(pipex);
+			exit(127);
+		}
+		if (pipex->fd2 == -1)
+		{
+			ft_free(pipex);
+			exit(1);
+		}
+		close(pipefd[1]);
+		dup2(pipefd[0], STDIN_FILENO);
+		dup2(pipex->fd2, STDOUT_FILENO);
+		if (execve(pipex->cmdn[0], pipex->cmdn, pipex->envp) == -1)
+			ft_exit(pipex, "fork failure", 127);
+
+	}
+	close(pipex->fd2);
+	close(pipefd[0]);
+}
 int	main(int ac, char **av, char **envp)
 {
 	t_pipex	pipex;
-	int (status1), (status2), (i);
-	int (*pipefd1), (*pipefd2);
+	int  (status2), (status1), (i);
+	int (pipefd1[2]), (pipefd2[2]);
 
-	status1 = 0;
 	status2 = 0;
-	i = 2;
-	if (ac != 5 || av[2][0] == 0 || av[3][0] == 0)
+	status1 = 0;
+	i = 3;
+	if (ac < 5)
 		exit(1);
 	ft_init(&pipex, ac, av, envp);
-	ft_open(&pipex);
+	///////////////////////////////////////////////////////////////////////////////////////
+	if (ft_strncmp(av[1], "here_doc", 8) == 0 && ac == 6)
+	{
+		ft_pipe(&pipex, pipefd2);
+		pipex.fd2 = open(av[ac - 1], O_WRONLY | O_CREAT | O_APPEND, 0644);
+		if (pipex.fd2 == -1)
+			perror("open failed2\n");
+		pipex.cmd1 = last_cmd(&pipex, av[3]);
+		pipex.cmdn = last_cmd(&pipex, av[ac - 2]);
+		int here_doc_fd = open("file", O_CREAT | O_RDWR | O_TRUNC, 0644);
+		if (here_doc_fd == -1)
+		{	ft_free(&pipex);
+			exit (1);
+		}
+		char buffer[10];
+		while (1)
+		{			
+			read(STDIN_FILENO, buffer, 10);
+			buffer[10] = 0;
+			if (ft_strncmp(buffer, av[2], ft_strlen(av[2])) == 0)
+				break;
+			write (here_doc_fd, buffer, 10);
+		}
+		close (here_doc_fd);
+		here_doc_first_p(&pipex, pipefd1, here_doc_fd);
+		here_doc_second_p(&pipex, pipefd1);
+		waitpid(pipex.pid1, &status1, WUNTRACED); 
+		waitpid(pipex.pidn, &status2, WUNTRACED); 
+		close(here_doc_fd);
+		ft_free(&pipex);
+		if (WIFEXITED(status2))
+			exit(WEXITSTATUS(status2));
+		else
+			exit(1);
+	}
+	//////////////////////////////////////////////////////////////////////////////////////////
 	pipex.cmd1 = last_cmd(&pipex, av[2]);
 	pipex.cmdn = last_cmd(&pipex, av[ac - 2]);
-
-	pipefd1 = malloc(8);
+	ft_open(&pipex);
 	ft_pipe(&pipex, pipefd1);
-	while (i < ac -1)
+	ft_first_p(&pipex, pipefd1);
+	while (i < ac - 2)
 	{
-		if (i == 2)
-			ft_first_p(&pipex, pipefd1);
-		else
-		{
-			pipefd2 = malloc(8);
-			ft_pipe(&pipex, pipefd2);
-			ft_middle_procces(&pipex, pipefd1, pipefd2, i);
-			free(pipefd1);
-			pipefd1 = pipefd2;
-		}
-		if (i == ac - 2)
-			ft_second_p(&pipex, pipefd2);
+		ft_pipe(&pipex, pipefd2);
+		ft_middle_procces(&pipex, pipefd1, pipefd2, i);
+		close (pipefd1[0]);
+		close(pipefd1[1]);
+		pipefd1[0] = pipefd2[0];
+		pipefd1[1] = pipefd2[1];
 		i++;
 	}
-	
-	waitpid(pipex.pid1, &status1, WUNTRACED);
+	ft_second_p(&pipex, pipefd1);
+    waitpid(pipex.pid1, &status1, WUNTRACED); 
     waitpid(pipex.pidn, &status2, WUNTRACED); 
-	
 	ft_free(&pipex);
-	exit(WEXITSTATUS(status2));
+	if (WIFEXITED(status2))
+		exit(WEXITSTATUS(status2));
+	else
+		exit(1);
 }

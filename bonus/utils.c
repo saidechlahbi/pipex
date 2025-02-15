@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "pipex.h"
+#include <time.h>
 
 void	ft_init(t_pipex *pipex, int ac, char **av, char **envp)
 {
@@ -70,6 +71,8 @@ char **ft_init_cmd(char *cmd)
 	char **str;
 	int (booll), (i);
 
+	if (cmd[0] == 0)
+		return NULL;
 	i = 0;
 	booll = 0;
 	while (cmd[i] && cmd[i] != '\'')
@@ -100,8 +103,6 @@ char **last_cmd(t_pipex *pipex, char *str)
 		return NULL;
 	a = command[0];
 	command[0] = ft_right_path(pipex, command[0]);
-	if (!command[0])
-		return NULL;
 	free(a);
 	return command;
 }
