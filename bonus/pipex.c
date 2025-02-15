@@ -141,13 +141,15 @@ void	here_doc_first_p(t_pipex *pipex, int *pipefd, int fd)
             exit(1);  
         }
 		close(pipefd[0]);
-		dup2(pipefd[1], STDOUT_FILENO);
 		dup2(fd, STDIN_FILENO);
+		close (fd);
+		dup2(pipefd[1], STDOUT_FILENO);
+		close(pipefd[1]);
 		if (execve(pipex->cmd1[0], pipex->cmd1, pipex->envp) == -1)
 			ft_exit(pipex, "fork failure", 127);
 	}
-	close(pipefd[1]);
 	close(fd);
+	close(pipefd[1]);
 }
 
 void	here_doc_second_p(t_pipex *pipex, int *pipefd)
@@ -169,7 +171,10 @@ void	here_doc_second_p(t_pipex *pipex, int *pipefd)
 		}
 		close(pipefd[1]);
 		dup2(pipefd[0], STDIN_FILENO);
+
+		close (pipefd[0]);
 		dup2(pipex->fd2, STDOUT_FILENO);
+		close (pipex->fd2);
 		if (execve(pipex->cmdn[0], pipex->cmdn, pipex->envp) == -1)
 			ft_exit(pipex, "fork failure", 127);
 
@@ -192,7 +197,7 @@ int	main(int ac, char **av, char **envp)
 	///////////////////////////////////////////////////////////////////////////////////////
 	if (ft_strncmp(av[1], "here_doc", 8) == 0 && ac == 6)
 	{
-		ft_pipe(&pipex, pipefd2);
+		ft_pipe(&pipex, pipefd1);
 		pipex.fd2 = open(av[ac - 1], O_WRONLY | O_CREAT | O_APPEND, 0644);
 		if (pipex.fd2 == -1)
 			perror("open failed2\n");
@@ -212,7 +217,7 @@ int	main(int ac, char **av, char **envp)
 				break;
 			write (here_doc_fd, buffer, 10);
 		}
-		close (here_doc_fd);
+		// close (pipefd1[1]);
 		here_doc_first_p(&pipex, pipefd1, here_doc_fd);
 		here_doc_second_p(&pipex, pipefd1);
 		waitpid(pipex.pid1, &status1, WUNTRACED); 
