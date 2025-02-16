@@ -6,7 +6,7 @@
 /*   By: sechlahb <sechlahb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/09 14:29:26 by sechlahb          #+#    #+#             */
-/*   Updated: 2025/02/14 17:36:17 by sechlahb         ###   ########.fr       */
+/*   Updated: 2025/02/15 14:48:49 by sechlahb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,5 +39,21 @@ char    *ft_right_path(t_pipex *pipex, char *comand);
 void    ft_free(t_pipex *pipex);
 void	ft_init(t_pipex *pipex, int ac, char **av, char **envp);
 char **last_cmd(t_pipex *pipex, char *str);
+
+///// get next line ////
+# ifndef BUFFER_SIZE
+#  define BUFFER_SIZE 10
+# endif
+
+//char	*ft_calloc(size_t nmemb, size_t size);
+char	*get_next_line(int fd);
+//int		ft_strlen(char *s);
+// char	*ft_strchr(char *s, int c);
+// char	*ft_strdup(char *s);
+// char	*ft_strjoin(char *s1, char *s2);
+// char	*get_last_rest_of_line(char *str);
+// char	*get_rest_for_next_line(char *str);
+// char	*get_next_line(int fd);
+
 
 #endif

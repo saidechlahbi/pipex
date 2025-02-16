@@ -6,7 +6,7 @@
 /*   By: sechlahb <sechlahb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/09 14:23:11 by sechlahb          #+#    #+#             */
-/*   Updated: 2025/02/14 17:34:40 by sechlahb         ###   ########.fr       */
+/*   Updated: 2025/02/16 23:16:00 by sechlahb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,13 +123,18 @@ void ft_middle_procces(t_pipex *pipex, int *pipefd1, int *pipefd2, int i)
 	close(pipefd1[0]);
 }
 
-void	here_doc_first_p(t_pipex *pipex, int *pipefd, int fd)
+void	here_doc_first_p(t_pipex *pipex, int *pipefd)
 {
 	pipex->pid1 = fork();
 	if (pipex->pid1 == -1)
 		ft_exit(pipex, "fork failure", 1);
 	if (pipex->pid1 == 0)
 	{
+		int fd = open("file", O_RDWR , 0644);
+		if (fd == -1)
+		{	ft_free(pipex);
+			exit (1);
+		}
         if (!pipex->cmd1 || pipex->cmd1[0] == NULL)
         {
             ft_free(pipex);
@@ -147,8 +152,9 @@ void	here_doc_first_p(t_pipex *pipex, int *pipefd, int fd)
 		close(pipefd[1]);
 		if (execve(pipex->cmd1[0], pipex->cmd1, pipex->envp) == -1)
 			ft_exit(pipex, "fork failure", 127);
+		
 	}
-	close(fd);
+	// close(fd);
 	close(pipefd[1]);
 }
 
@@ -208,17 +214,19 @@ int	main(int ac, char **av, char **envp)
 		{	ft_free(&pipex);
 			exit (1);
 		}
-		char buffer[10];
+		char *buffer;
 		while (1)
-		{			
-			read(STDIN_FILENO, buffer, 10);
-			buffer[10] = 0;
+		{
+			buffer = get_next_line(STDIN_FILENO);
 			if (ft_strncmp(buffer, av[2], ft_strlen(av[2])) == 0)
 				break;
-			write (here_doc_fd, buffer, 10);
+			write (here_doc_fd, buffer, ft_strlen(buffer));
+			free(buffer);
 		}
+		free(buffer);
+		close (here_doc_fd);
 		// close (pipefd1[1]);
-		here_doc_first_p(&pipex, pipefd1, here_doc_fd);
+		here_doc_first_p(&pipex, pipefd1);
 		here_doc_second_p(&pipex, pipefd1);
 		waitpid(pipex.pid1, &status1, WUNTRACED); 
 		waitpid(pipex.pidn, &status2, WUNTRACED); 
